@@ -7,8 +7,9 @@
 </head>
 <body>
   <h1>Chat room</h1>
-  <div id="app">
-    <example></example>
+  <div id="app" class="container">
+    <chat-log :messages="messages"></chat-log>
+    <chat-composer v-on:messagesent="addMessage" ></chat-composer>
   </div>
 
   <script type="text/javascript" src="js/app.js"></script>
