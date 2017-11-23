@@ -1,7 +1,7 @@
 <template lang="html">
   <div>
     <p>{{ message.message }}</p>
-    <small>{{ message.user }}</small>
+    <small>{{ message.user.name }}</small>
   </div>
 </template>
 

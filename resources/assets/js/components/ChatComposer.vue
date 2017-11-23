@@ -23,7 +23,9 @@ export default {
       // allow to listen for events
       this.$emit('messagesent', {
         message: this.messageText,
-        user: 'John Doe'
+        user: {
+          name: $('.navbar-right .dropdown-toggle').text()
+        }
       });
 
       this.messageText = '';

@@ -1205,19 +1205,21 @@ Vue.component('chat-composer', __webpack_require__(53));
 var app = new Vue({
   el: '#app',
   data: {
-    messages: [{
-      message: 'Hello',
-      user: 'John doe'
-    }, {
-      message: 'Hey',
-      user: 'Daniil'
-    }]
+    messages: []
   },
   methods: {
     addMessage: function addMessage(message) {
       // add to existing messages and store in database
       this.messages.push(message);
+      axios.post('/messages', message).then(function (response) {});
     }
+  },
+  created: function created() {
+    var _this = this;
+
+    axios.get('/messages').then(function (response) {
+      _this.messages = response.data;
+    });
   }
 });
 
@@ -42439,7 +42441,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('p', [_vm._v(_vm._s(_vm.message.message))]), _vm._v(" "), _c('small', [_vm._v(_vm._s(_vm.message.user))])])
+  return _c('div', [_c('p', [_vm._v(_vm._s(_vm.message.message))]), _vm._v(" "), _c('small', [_vm._v(_vm._s(_vm.message.user.name))])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -42528,7 +42530,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.chat-log .chat-message[data-v-3c82ad75]:nth-child(even) {\r\n  background: #ccc;\n}\n.empty[data-v-3c82ad75] {\r\n  padding: 1rem;\r\n  text-align: center;\n}\r\n", ""]);
 
 // exports
 
@@ -42539,6 +42541,9 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
 //
 //
 //
@@ -42559,13 +42564,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "chat-log"
-  }, _vm._l((_vm.messages), function(message) {
+  }, [_vm._l((_vm.messages), function(message) {
     return _c('chat-message', {
       attrs: {
         "message": message
       }
     })
-  }))
+  }), _vm._v(" "), _c('div', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.messages.length === 0),
+      expression: "messages.length === 0"
+    }],
+    staticClass: "empty"
+  }, [_vm._v("\n    Nothing here yet\n  ")])], 2)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -42691,7 +42704,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       // allow to listen for events
       this.$emit('messagesent', {
         message: this.messageText,
-        user: 'John Doe'
+        user: {
+          name: $('.navbar-right .dropdown-toggle').text()
+        }
       });
 
       this.messageText = '';
