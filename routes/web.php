@@ -1,4 +1,5 @@
 <?php
+use App\Events\PostedMessage;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,11 +29,12 @@ Route::group(['middleware' => 'auth'], function () {
         // store new message
         $user = Auth::user();
 
-        $message = request()->get('message');
-
-        $user->messages()->create([
-          'message' => $message
+        $message = $user->messages()->create([
+          'message' => request()->get('message')
         ]);
+
+        // anounce new message posted
+        broadcast(new PostedMessage($message, $user))->toOthers();
 
         return ['status' => 200];
     });
@@ -41,3 +43,7 @@ Route::group(['middleware' => 'auth'], function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Broadcast::channel('chatroom', function($user) {
+  return $user;
+});

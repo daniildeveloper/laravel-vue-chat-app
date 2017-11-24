@@ -25,6 +25,7 @@ const app = new Vue({
     data: {
       messages: [
       ],
+      usersInRoom: [],
     },
     methods: {
       addMessage(message) {
@@ -38,5 +39,29 @@ const app = new Vue({
       axios.get('/messages').then(response => {
         this.messages = response.data;
       });
+
+      Echo.join('chatroom')
+        .here(users => {
+          this.usersInRoom = users;
+        })
+        .joining(user => {
+          this.usersInRoom.push(user);
+        })
+        .leaving(user => {
+          // remove leaved user from array
+          this.usersInRoom = this.usersInRoom.filter(u => u != user)
+        })
+        .listen('PostedMessage', (event) => {
+          // handle event
+          this.messages.push({
+            message: e.message.message,
+            user: e.user
+          })
+        });
+
+      Echo.private('chatroom')
+      .listen('PostedMessage', e => {
+        console.log(e)
+      })
     }
 });

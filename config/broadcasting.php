@@ -26,7 +26,7 @@ return [
     | to broadcast events to other systems or over websockets. Samples of
     | each available type of connection are provided inside this array.
     |
-    */
+    */  
 
     'connections' => [
 
@@ -36,7 +36,8 @@ return [
             'secret' => env('PUSHER_APP_SECRET'),
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
-                //
+                'cluster' => 'ap2',
+                'encrypted' => true
             ],
         ],
 
